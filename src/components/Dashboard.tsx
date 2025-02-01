@@ -7,6 +7,7 @@ import type { Transaction } from "@/types/transaction";
 import { MessageCircle } from "lucide-react";
 import { Card } from "./ui/card";
 import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -84,7 +85,10 @@ export const Dashboard = () => {
               className="glass-card px-5 py-2.5 flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform"
               onClick={() => navigate('/chat')}
             >
-              <MessageCircle className="w-4 h-4 text-[#9b87f5]" />
+              <Avatar className="h-6 w-6">
+                <AvatarImage src="/lovable-uploads/697cab9d-b32f-42e8-b73a-a53f3675d7ba.png" alt="Chimchar" />
+                <AvatarFallback>CH</AvatarFallback>
+              </Avatar>
               <span className="text-sm font-medium text-white">ChatBuddy</span>
             </Card>
           </div>

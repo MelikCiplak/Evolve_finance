@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArrowLeft, Send } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -15,7 +16,7 @@ export default function ChatBuddy() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: 'Hello! I\'m your financial ChatBuddy. I can help you with budgeting, investing, and general financial advice. How can I assist you today?'
+      content: 'Hi! I\'m Chimchar, your fiery financial advisor! 🔥 I\'m here to help you manage your money and make smart financial decisions. What would you like to know about managing your finances?'
     }
   ]);
   const [input, setInput] = useState('');
@@ -36,7 +37,7 @@ export default function ChatBuddy() {
     setTimeout(() => {
       const aiMessage: Message = {
         role: 'assistant',
-        content: 'I understand your question about finances. As an AI assistant, I aim to provide helpful guidance, but remember that for specific financial decisions, it\'s best to consult with a qualified financial advisor.'
+        content: 'As your fiery financial companion, I want to help! While I can offer general guidance, remember that for specific investment decisions, it\'s best to consult with a qualified financial advisor. What else would you like to know? 🔥'
       };
       setMessages(prev => [...prev, aiMessage]);
     }, 1000);
@@ -45,46 +46,62 @@ export default function ChatBuddy() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-black">
-      <div className="flex items-center p-4 border-b border-gray-800">
+    <div className="flex flex-col h-screen bg-gradient-to-b from-orange-500 to-black">
+      <div className="flex items-center p-4 border-b border-orange-600">
         <Button 
           variant="ghost" 
           size="icon"
           onClick={() => navigate(-1)}
-          className="mr-2"
+          className="mr-2 text-white hover:text-orange-200"
         >
           <ArrowLeft className="h-4 w-4" />
         </Button>
-        <h1 className="text-xl font-semibold text-white">ChatBuddy</h1>
+        <div className="flex items-center gap-2">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src="/lovable-uploads/697cab9d-b32f-42e8-b73a-a53f3675d7ba.png" alt="Chimchar" />
+            <AvatarFallback>CH</AvatarFallback>
+          </Avatar>
+          <h1 className="text-xl font-semibold text-white">Chimchar Finance</h1>
+        </div>
       </div>
       
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
           {messages.map((message, index) => (
-            <Card
-              key={index}
-              className={`p-4 max-w-[80%] ${
-                message.role === 'user'
-                  ? 'ml-auto bg-[#9b87f5] text-white'
-                  : 'bg-gray-800 text-white'
-              }`}
-            >
-              {message.content}
-            </Card>
+            <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              {message.role === 'assistant' && (
+                <Avatar className="h-8 w-8 mr-2">
+                  <AvatarImage src="/lovable-uploads/697cab9d-b32f-42e8-b73a-a53f3675d7ba.png" alt="Chimchar" />
+                  <AvatarFallback>CH</AvatarFallback>
+                </Avatar>
+              )}
+              <Card
+                className={`p-4 max-w-[80%] ${
+                  message.role === 'user'
+                    ? 'bg-orange-500 text-white'
+                    : 'bg-gray-800 text-white'
+                }`}
+              >
+                {message.content}
+              </Card>
+            </div>
           ))}
         </div>
       </ScrollArea>
       
-      <div className="p-4 border-t border-gray-800">
+      <div className="p-4 border-t border-orange-600">
         <div className="flex gap-2">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Ask about your finances..."
-            className="flex-1"
+            placeholder="Ask Chimchar about your finances..."
+            className="flex-1 bg-gray-800 text-white border-orange-600 focus:border-orange-400"
           />
-          <Button onClick={handleSend}>
+          <Button 
+            onClick={handleSend}
+            className="bg-orange-500 hover:bg-orange-600"
+          >
             <Send className="h-4 w-4" />
           </Button>
         </div>
