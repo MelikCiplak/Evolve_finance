@@ -3,7 +3,6 @@ import { toast } from "sonner";
 import { BalanceCard } from "./BalanceCard";
 import { TransactionsList } from "./TransactionsList";
 import { TransactionDialogs } from "./TransactionDialogs";
-import { ChatBot } from "./ChatBot";
 import type { Transaction } from "@/types/transaction";
 
 export const Dashboard = () => {
@@ -88,7 +87,6 @@ export const Dashboard = () => {
           <TransactionsList transactions={transactions} />
         )}
       </div>
-      <ChatBot balance={totalBalance} />
     </div>
   );
 };
