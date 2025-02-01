@@ -5,7 +5,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { ArrowUpRight, ArrowDownRight, Plus, Minus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { UFCFighter } from "./UFCFighter";
 
 interface Transaction {
   id: number;
@@ -21,7 +20,6 @@ export const Dashboard = () => {
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false);
   
-  // Updated starting balance to $99
   const [totalBalance, setTotalBalance] = useState(99.00);
   const monthlyChange = 2.5;
   const [transactions, setTransactions] = useState<Transaction[]>([
@@ -172,8 +170,6 @@ export const Dashboard = () => {
             </div>
           </Card>
         )}
-
-        <UFCFighter balance={totalBalance} />
       </div>
     </div>
   );
