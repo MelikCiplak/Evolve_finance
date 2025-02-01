@@ -22,6 +22,22 @@ export const Dashboard = () => {
     { id: 1, description: 'Initial Balance', amount: 99, date: new Date().toISOString().split('T')[0], type: 'income' },
   ]);
 
+  const getPokemonImage = (balance: number) => {
+    if (balance >= 100000) {
+      return "/lovable-uploads/67ddfc20-3fa2-488c-a3bc-9f8e662214d8.png"; // Infernape
+    } else if (balance >= 10000) {
+      return "/lovable-uploads/48c4589b-a4a3-402d-a2e6-9b1c95e7a9c2.png"; // Monferno
+    } else {
+      return "/lovable-uploads/697cab9d-b32f-42e8-b73a-a53f3675d7ba.png"; // Chimchar
+    }
+  };
+
+  const getPokemonName = (balance: number) => {
+    if (balance >= 100000) return "Infernape";
+    if (balance >= 10000) return "Monferno";
+    return "Chimchar";
+  };
+
   const handleAddFunds = () => {
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0) {
@@ -35,6 +51,10 @@ export const Dashboard = () => {
     // Check if evolution should occur
     if (totalBalance < 10000 && newBalance >= 10000) {
       toast.success("🎉 Congratulations! Your Chimchar has evolved into Monferno!", {
+        duration: 5000
+      });
+    } else if (totalBalance < 100000 && newBalance >= 100000) {
+      toast.success("🎉 Congratulations! Your Monferno has evolved into Infernape!", {
         duration: 5000
       });
     }
@@ -96,10 +116,8 @@ export const Dashboard = () => {
             >
               <Avatar className="h-6 w-6">
                 <AvatarImage 
-                  src={totalBalance >= 10000 
-                    ? "/lovable-uploads/48c4589b-a4a3-402d-a2e6-9b1c95e7a9c2.png" 
-                    : "/lovable-uploads/697cab9d-b32f-42e8-b73a-a53f3675d7ba.png"} 
-                  alt={totalBalance >= 10000 ? "Monferno" : "Chimchar"} 
+                  src={getPokemonImage(totalBalance)}
+                  alt={getPokemonName(totalBalance)}
                 />
                 <AvatarFallback>CH</AvatarFallback>
               </Avatar>
@@ -134,14 +152,12 @@ export const Dashboard = () => {
 
       {/* Floating Pokemon Icon */}
       <img 
-        src={totalBalance >= 10000 
-          ? "/lovable-uploads/48c4589b-a4a3-402d-a2e6-9b1c95e7a9c2.png" 
-          : "/lovable-uploads/697cab9d-b32f-42e8-b73a-a53f3675d7ba.png"}
-        alt={totalBalance >= 10000 ? "Monferno" : "Chimchar"}
+        src={getPokemonImage(totalBalance)}
+        alt={getPokemonName(totalBalance)}
         className="fixed bottom-6 right-6 w-16 h-16 cursor-pointer hover:scale-110 transition-transform duration-200 animate-slide"
         onClick={() => {
           navigate('/chat');
-          toast.success(`Hey! I'm ${totalBalance >= 10000 ? 'Monferno' : 'Chimchar'}, your financial buddy! 🔥`);
+          toast.success(`Hey! I'm ${getPokemonName(totalBalance)}, your financial buddy! 🔥`);
         }}
         style={{
           animation: 'slide 2s ease-in-out infinite alternate'
