@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRight, Wallet, TrendingUp, PiggyBank } from "lucide-react";
 import { useState } from "react";
 import { FinanceChat } from "./FinanceChat";
+import { MonkeyAssistant } from "./MonkeyAssistant";
 
 export const Dashboard = () => {
   const [showChat, setShowChat] = useState(false);
@@ -55,6 +56,8 @@ export const Dashboard = () => {
             </div>
           </Card>
         </div>
+
+        <MonkeyAssistant onMonkeyClick={() => setShowChat(true)} />
 
         {showChat && (
           <div className="fixed bottom-6 right-6 w-96 h-[600px] animate-in">

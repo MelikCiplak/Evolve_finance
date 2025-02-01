@@ -13,7 +13,7 @@ export const FinanceChat = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hello! I'm your AI financial assistant. How can I help you today?",
+      content: "Hello! I'm your monkey financial assistant. How can I help you today? 🐒",
     },
   ]);
   const [input, setInput] = useState("");
@@ -21,22 +21,21 @@ export const FinanceChat = () => {
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    const newMessages = [
+    const newMessages: Message[] = [
       ...messages,
       { role: "user", content: input },
-      { role: "assistant", content: "I'm analyzing your question..." },
+      { role: "assistant", content: "I'm analyzing your question... 🍌" },
     ];
     setMessages(newMessages);
     setInput("");
 
-    // Here we would normally make an API call to an AI service
-    // For now, we'll simulate a response
+    // Simulate AI response
     setTimeout(() => {
       setMessages([
         ...newMessages.slice(0, -1),
         {
           role: "assistant",
-          content: "Based on your question, I would recommend reviewing your budget and considering investment options. Would you like me to help you create a financial plan?",
+          content: "Based on your question, I would recommend reviewing your budget and considering investment options. Would you like me to help you create a financial plan? 🐒🍌",
         },
       ]);
     }, 1000);
@@ -45,7 +44,7 @@ export const FinanceChat = () => {
   return (
     <Card className="glass-card h-full flex flex-col">
       <div className="p-4 border-b">
-        <h3 className="font-semibold">Financial Assistant</h3>
+        <h3 className="font-semibold">Monkey Financial Assistant 🐒</h3>
       </div>
       
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -74,7 +73,7 @@ export const FinanceChat = () => {
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about your finances..."
+            placeholder="Ask your monkey friend..."
             onKeyPress={(e) => e.key === "Enter" && handleSend()}
             className="flex-1"
           />
