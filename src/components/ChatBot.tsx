@@ -38,7 +38,7 @@ export const ChatBot = ({ balance }: { balance: number }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: `Hi! I'm ${balance >= 10000 ? 'Monferno' : 'Chimchar'}, your financial advisor! How can I help you today?`,
+      content: `Hi! I'm ${balance >= 100000 ? 'Infernape' : balance >= 10000 ? 'Monferno' : 'Chimchar'}, your financial advisor! How can I help you today?`,
     },
   ]);
   const [input, setInput] = useState("");
@@ -60,12 +60,18 @@ export const ChatBot = ({ balance }: { balance: number }) => {
     setInput("");
   };
 
-  // Use the new Monferno image when balance is >= $10,000
-  const pokemonImage = balance >= 10000 
-    ? "/lovable-uploads/83bbfe47-3070-40c9-8767-f9c5db0629fa.png"
-    : "/lovable-uploads/1ec7a8b0-852e-4e7f-897d-51c39d1b66e7.png";
+  // Use different Pokemon images based on balance thresholds
+  const pokemonImage = balance >= 100000
+    ? "/lovable-uploads/8619d662-bb2b-4705-a307-489518dc3b71.png"
+    : balance >= 10000 
+      ? "/lovable-uploads/83bbfe47-3070-40c9-8767-f9c5db0629fa.png"
+      : "/lovable-uploads/1ec7a8b0-852e-4e7f-897d-51c39d1b66e7.png";
 
-  const pokemonName = balance >= 10000 ? 'Monferno' : 'Chimchar';
+  const pokemonName = balance >= 100000 
+    ? 'Infernape' 
+    : balance >= 10000 
+      ? 'Monferno' 
+      : 'Chimchar';
 
   return (
     <>
