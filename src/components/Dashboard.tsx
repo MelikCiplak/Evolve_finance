@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { ArrowUpRight, ArrowDownRight, Plus, Minus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { UFCFighter } from "./UFCFighter";
 
 interface Transaction {
   id: number;
@@ -174,6 +175,8 @@ export const Dashboard = () => {
             </div>
           </Card>
         )}
+
+        <UFCFighter balance={totalBalance} />
       </div>
     </div>
   );
