@@ -117,6 +117,24 @@ export const Dashboard = () => {
           <TransactionsList transactions={transactions} />
         )}
       </div>
+
+      {/* Floating Chimchar Icon */}
+      <div 
+        className="fixed bottom-6 right-6 cursor-pointer transform hover:scale-110 transition-transform duration-200"
+        onClick={() => {
+          navigate('/chat');
+          toast.success("Hey! I'm Chimchar, your financial buddy! 🔥");
+        }}
+      >
+        <Avatar className="h-16 w-16 shadow-lg hover:shadow-xl transition-shadow ring-2 ring-orange-500 hover:ring-4">
+          <AvatarImage 
+            src="/lovable-uploads/697cab9d-b32f-42e8-b73a-a53f3675d7ba.png" 
+            alt="Chimchar"
+            className="animate-bounce"
+          />
+          <AvatarFallback className="bg-orange-500 text-white">CH</AvatarFallback>
+        </Avatar>
+      </div>
     </div>
   );
 };
