@@ -12,11 +12,28 @@ interface Message {
   content: string;
 }
 
+const getPokemonImage = (balance: number) => {
+  if (balance >= 100000) {
+    return "/lovable-uploads/67ddfc20-3fa2-488c-a3bc-9f8e662214d8.png"; // Infernape
+  } else if (balance >= 10000) {
+    return "/lovable-uploads/48c4589b-a4a3-402d-a2e6-9b1c95e7a9c2.png"; // Monferno
+  } else {
+    return "/lovable-uploads/697cab9d-b32f-42e8-b73a-a53f3675d7ba.png"; // Chimchar
+  }
+};
+
+const getPokemonName = (balance: number) => {
+  if (balance >= 100000) return "Infernape";
+  if (balance >= 10000) return "Monferno";
+  return "Chimchar";
+};
+
 export default function ChatBuddy() {
+  const [totalBalance] = useState(99.00); // This should ideally come from a shared state management solution
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: 'Hi! I\'m Chimchar, your fiery financial advisor! 🔥 I\'m here to help you manage your money and make smart financial decisions. What would you like to know about managing your finances?'
+      content: `Hi! I'm ${getPokemonName(totalBalance)}, your fiery financial advisor! 🔥 I'm here to help you manage your money and make smart financial decisions. What would you like to know about managing your finances?`
     }
   ]);
   const [input, setInput] = useState('');
@@ -37,7 +54,7 @@ export default function ChatBuddy() {
     setTimeout(() => {
       const aiMessage: Message = {
         role: 'assistant',
-        content: 'As your fiery financial companion, I want to help! While I can offer general guidance, remember that for specific investment decisions, it\'s best to consult with a qualified financial advisor. What else would you like to know? 🔥'
+        content: `As your fiery financial companion, I want to help! While I can offer general guidance, remember that for specific investment decisions, it's best to consult with a qualified financial advisor. What else would you like to know? 🔥`
       };
       setMessages(prev => [...prev, aiMessage]);
     }, 1000);
@@ -58,10 +75,10 @@ export default function ChatBuddy() {
         </Button>
         <div className="flex items-center gap-2">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="/lovable-uploads/697cab9d-b32f-42e8-b73a-a53f3675d7ba.png" alt="Chimchar" />
+            <AvatarImage src={getPokemonImage(totalBalance)} alt={getPokemonName(totalBalance)} />
             <AvatarFallback>CH</AvatarFallback>
           </Avatar>
-          <h1 className="text-xl font-semibold text-white">Chimchar Finance</h1>
+          <h1 className="text-xl font-semibold text-white">{getPokemonName(totalBalance)} Finance</h1>
         </div>
       </div>
       
@@ -71,7 +88,7 @@ export default function ChatBuddy() {
             <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               {message.role === 'assistant' && (
                 <Avatar className="h-8 w-8 mr-2">
-                  <AvatarImage src="/lovable-uploads/697cab9d-b32f-42e8-b73a-a53f3675d7ba.png" alt="Chimchar" />
+                  <AvatarImage src={getPokemonImage(totalBalance)} alt={getPokemonName(totalBalance)} />
                   <AvatarFallback>CH</AvatarFallback>
                 </Avatar>
               )}
@@ -95,7 +112,7 @@ export default function ChatBuddy() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Ask Chimchar about your finances..."
+            placeholder={`Ask ${getPokemonName(totalBalance)} about your finances...`}
             className="flex-1 bg-gray-800 text-white border-orange-600 focus:border-orange-400"
           />
           <Button 
