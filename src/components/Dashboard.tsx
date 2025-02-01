@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { ArrowUpRight, ArrowDownRight, Plus, Minus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { MonkeyAssistant } from "./MonkeyAssistant";
 
 interface Transaction {
   id: number;
@@ -70,6 +71,25 @@ export const Dashboard = () => {
     setAmount("");
     setShowWithdrawDialog(false);
     toast.success(`Successfully withdrew $${numAmount.toLocaleString()}`);
+  };
+
+  const getFinancialAdvice = () => {
+    if (totalBalance < 1000) {
+      toast("Keep saving! You're on your way to evolving into Monferno at $1,000!", {
+        description: "Try setting aside a fixed amount each month to reach your goal faster.",
+        duration: 5000,
+      });
+    } else if (totalBalance < 50000) {
+      toast("Great progress! You're getting closer to evolving into Infernape at $50,000!", {
+        description: "Consider diversifying your savings into different investment options.",
+        duration: 5000,
+      });
+    } else {
+      toast("Congratulations! You've reached Infernape status!", {
+        description: "Your financial journey is impressive! Consider long-term investment strategies to maintain your wealth.",
+        duration: 5000,
+      });
+    }
   };
 
   return (
@@ -171,6 +191,7 @@ export const Dashboard = () => {
           </Card>
         )}
       </div>
+      <MonkeyAssistant onMonkeyClick={getFinancialAdvice} />
     </div>
   );
 };
