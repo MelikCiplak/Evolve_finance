@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Trophy, Star } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface UFCFighterProps {
@@ -44,10 +44,22 @@ export const UFCFighter = ({ balance }: UFCFighterProps) => {
           <TooltipTrigger>
             <div className={`relative ${currentLevel.scale} transition-all duration-500`}>
               {/* Fighter Avatar */}
-              <div className="w-32 h-32 rounded-full bg-black border-4 border-primary flex items-center justify-center relative overflow-hidden glass-card">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50" />
-                {/* Fighter Icon */}
-                <Star className="w-16 h-16 text-primary" />
+              <div className="w-32 h-32 rounded-full bg-gradient-to-b from-gray-800 to-black border-4 border-primary flex items-center justify-center relative overflow-hidden">
+                {/* Fighter Body */}
+                <div className="absolute inset-0">
+                  {/* Head */}
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-primary/20 border-2 border-primary" />
+                  
+                  {/* Torso */}
+                  <div className="absolute top-16 left-1/2 -translate-x-1/2 w-16 h-20 bg-primary/20 rounded-t-xl border-2 border-primary" />
+                  
+                  {/* Arms */}
+                  <div className="absolute top-16 left-6 w-4 h-16 bg-primary/20 rounded-full border-2 border-primary transform rotate-12" />
+                  <div className="absolute top-16 right-6 w-4 h-16 bg-primary/20 rounded-full border-2 border-primary transform -rotate-12" />
+                  
+                  {/* Fighting Stance Glow */}
+                  <div className="absolute inset-0 bg-primary/5 animate-pulse" />
+                </div>
                 
                 {/* Rank Badge */}
                 <div className="absolute -top-1 -right-1 bg-primary text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
@@ -65,7 +77,7 @@ export const UFCFighter = ({ balance }: UFCFighterProps) => {
             </div>
           </TooltipTrigger>
           <TooltipContent>
-            <p>{currentLevel.name}</p>
+            <p className="font-bold">{currentLevel.name}</p>
             {balance < 100000 && (
               <p className="text-sm text-muted-foreground">
                 Next rank at ${(fighterLevels.find(level => level.minBalance > balance)?.minBalance || 0).toLocaleString()}

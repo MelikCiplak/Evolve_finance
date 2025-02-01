@@ -21,14 +21,11 @@ export const Dashboard = () => {
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false);
   
-  // Mock data - in a real app this would come from an API
-  const [totalBalance, setTotalBalance] = useState(24563.00);
+  // Updated starting balance to $99
+  const [totalBalance, setTotalBalance] = useState(99.00);
   const monthlyChange = 2.5;
   const [transactions, setTransactions] = useState<Transaction[]>([
-    { id: 1, description: 'Salary', amount: 5000, date: '2024-04-01', type: 'income' },
-    { id: 2, description: 'Rent', amount: 1500, date: '2024-04-02', type: 'expense' },
-    { id: 3, description: 'Groceries', amount: 200, date: '2024-04-03', type: 'expense' },
-    { id: 4, description: 'Freelance Work', amount: 1000, date: '2024-04-04', type: 'income' },
+    { id: 1, description: 'Initial Balance', amount: 99, date: new Date().toISOString().split('T')[0], type: 'income' },
   ]);
 
   const handleAddFunds = () => {
