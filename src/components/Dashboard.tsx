@@ -68,8 +68,7 @@ export const Dashboard = () => {
   return (
     <div className="min-h-screen bg-black p-6">
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Brand Name */}
-        <div className="text-center mb-12">
+        <div className="flex justify-between items-center mb-12">
           <h2 className="text-4xl font-bold tracking-wider text-[#222222] opacity-80 hover:opacity-100 transition-opacity duration-300" 
               style={{
                 textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
@@ -77,13 +76,10 @@ export const Dashboard = () => {
               }}>
             evolve
           </h2>
-        </div>
-
-        {/* Chat Friend Box */}
-        <div className="fixed top-6 right-6">
-          <Card className="glass-card p-4 flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform">
-            <MessageCircle className="w-5 h-5 text-[#9b87f5]" />
-            <span className="text-sm font-medium text-white">Chat with Eve</span>
+          
+          <Card className="glass-card px-5 py-2.5 flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform">
+            <MessageCircle className="w-4 h-4 text-[#9b87f5]" />
+            <span className="text-sm font-medium text-white">ChatBuddy</span>
           </Card>
         </div>
 
