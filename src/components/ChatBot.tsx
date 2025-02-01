@@ -64,7 +64,7 @@ export const ChatBot = ({ balance }: { balance: number }) => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 w-16 h-16 rounded-full hover:scale-110 transition-transform duration-200 focus:outline-none"
+        className="fixed bottom-6 right-6 w-20 h-20 rounded-full hover:scale-110 transition-transform duration-200 focus:outline-none"
       >
         <img
           src="/lovable-uploads/1ec7a8b0-852e-4e7f-897d-51c39d1b66e7.png"
@@ -74,19 +74,19 @@ export const ChatBot = ({ balance }: { balance: number }) => {
       </button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <img
                 src="/lovable-uploads/1ec7a8b0-852e-4e7f-897d-51c39d1b66e7.png"
                 alt="Chimchar"
-                className="w-8 h-8 object-contain"
+                className="w-10 h-10 object-contain"
               />
               Chimchar - Financial Advisor
             </DialogTitle>
           </DialogHeader>
 
-          <ScrollArea className="h-[50vh] w-full pr-4">
+          <ScrollArea className="h-[60vh] w-full pr-4">
             <div className="space-y-4">
               {messages.map((message, index) => (
                 <div
