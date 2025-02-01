@@ -6,8 +6,10 @@ import { TransactionDialogs } from "./TransactionDialogs";
 import type { Transaction } from "@/types/transaction";
 import { MessageCircle } from "lucide-react";
 import { Card } from "./ui/card";
+import { useNavigate } from "react-router-dom";
 
 export const Dashboard = () => {
+  const navigate = useNavigate();
   const [showTransactions, setShowTransactions] = useState(false);
   const [amount, setAmount] = useState("");
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -78,7 +80,10 @@ export const Dashboard = () => {
           </h2>
           
           <div className="ml-auto">
-            <Card className="glass-card px-5 py-2.5 flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform">
+            <Card 
+              className="glass-card px-5 py-2.5 flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform"
+              onClick={() => navigate('/chat')}
+            >
               <MessageCircle className="w-4 h-4 text-[#9b87f5]" />
               <span className="text-sm font-medium text-white">ChatBuddy</span>
             </Card>
