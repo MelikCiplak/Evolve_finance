@@ -71,7 +71,7 @@ export const ChatBot = ({ balance }: { balance: number }) => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 w-20 h-20 rounded-full hover:scale-110 transition-transform duration-200 focus:outline-none"
+        className="fixed bottom-6 right-6 w-40 h-40 rounded-full hover:scale-110 transition-transform duration-200 focus:outline-none"
       >
         <img
           src={pokemonImage}
@@ -87,7 +87,7 @@ export const ChatBot = ({ balance }: { balance: number }) => {
               <img
                 src={pokemonImage}
                 alt={pokemonName}
-                className="w-10 h-10 object-contain"
+                className="w-20 h-20 object-contain"
               />
               {pokemonName} - Financial Advisor
             </DialogTitle>
