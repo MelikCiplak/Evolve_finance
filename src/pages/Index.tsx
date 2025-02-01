@@ -1,7 +1,13 @@
 import { Dashboard } from "@/components/Dashboard";
+import { ChatBar } from "@/components/ChatBar";
 
 const Index = () => {
-  return <Dashboard />;
+  return (
+    <>
+      <ChatBar />
+      <Dashboard />
+    </>
+  );
 };
 
 export default Index;
