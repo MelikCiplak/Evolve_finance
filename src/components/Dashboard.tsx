@@ -29,7 +29,16 @@ export const Dashboard = () => {
       return;
     }
 
-    setTotalBalance(prev => prev + numAmount);
+    const newBalance = totalBalance + numAmount;
+    setTotalBalance(newBalance);
+    
+    // Check if evolution should occur
+    if (totalBalance < 10000 && newBalance >= 10000) {
+      toast.success("🎉 Congratulations! Your Chimchar has evolved into Monferno!", {
+        duration: 5000
+      });
+    }
+
     const newTransaction: Transaction = {
       id: transactions.length + 1,
       description: 'Added Funds',
@@ -86,7 +95,12 @@ export const Dashboard = () => {
               onClick={() => navigate('/chat')}
             >
               <Avatar className="h-6 w-6">
-                <AvatarImage src="/lovable-uploads/697cab9d-b32f-42e8-b73a-a53f3675d7ba.png" alt="Chimchar" />
+                <AvatarImage 
+                  src={totalBalance >= 10000 
+                    ? "/lovable-uploads/48c4589b-a4a3-402d-a2e6-9b1c95e7a9c2.png" 
+                    : "/lovable-uploads/697cab9d-b32f-42e8-b73a-a53f3675d7ba.png"} 
+                  alt={totalBalance >= 10000 ? "Monferno" : "Chimchar"} 
+                />
                 <AvatarFallback>CH</AvatarFallback>
               </Avatar>
               <span className="text-sm font-medium text-white">ChatBuddy</span>
@@ -118,14 +132,16 @@ export const Dashboard = () => {
         )}
       </div>
 
-      {/* Floating Chimchar Icon */}
+      {/* Floating Pokemon Icon */}
       <img 
-        src="/lovable-uploads/697cab9d-b32f-42e8-b73a-a53f3675d7ba.png"
-        alt="Chimchar"
+        src={totalBalance >= 10000 
+          ? "/lovable-uploads/48c4589b-a4a3-402d-a2e6-9b1c95e7a9c2.png" 
+          : "/lovable-uploads/697cab9d-b32f-42e8-b73a-a53f3675d7ba.png"}
+        alt={totalBalance >= 10000 ? "Monferno" : "Chimchar"}
         className="fixed bottom-6 right-6 w-16 h-16 cursor-pointer hover:scale-110 transition-transform duration-200 animate-slide"
         onClick={() => {
           navigate('/chat');
-          toast.success("Hey! I'm Chimchar, your financial buddy! 🔥");
+          toast.success(`Hey! I'm ${totalBalance >= 10000 ? 'Monferno' : 'Chimchar'}, your financial buddy! 🔥`);
         }}
         style={{
           animation: 'slide 2s ease-in-out infinite alternate'
