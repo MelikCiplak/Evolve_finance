@@ -8,15 +8,16 @@ import { MessageCircle } from "lucide-react";
 import { Card } from "./ui/card";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useBalance } from "@/context/BalanceContext";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
+  const { totalBalance, setTotalBalance } = useBalance();
   const [showTransactions, setShowTransactions] = useState(false);
   const [amount, setAmount] = useState("");
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false);
   
-  const [totalBalance, setTotalBalance] = useState(99.00);
   const monthlyChange = 2.5;
   const [transactions, setTransactions] = useState<Transaction[]>([
     { id: 1, description: 'Initial Balance', amount: 99, date: new Date().toISOString().split('T')[0], type: 'income' },
@@ -48,7 +49,6 @@ export const Dashboard = () => {
     const newBalance = totalBalance + numAmount;
     setTotalBalance(newBalance);
     
-    // Check if evolution should occur
     if (totalBalance < 10000 && newBalance >= 10000) {
       toast.success("🎉 Congratulations! Your Chimchar has evolved into Monferno!", {
         duration: 5000

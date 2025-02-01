@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArrowLeft, Send } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useBalance } from "@/context/BalanceContext";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -29,7 +30,7 @@ const getPokemonName = (balance: number) => {
 };
 
 export default function ChatBuddy() {
-  const [totalBalance] = useState(99.00); // This should ideally come from a shared state management solution
+  const { totalBalance } = useBalance();
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
