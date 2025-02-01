@@ -38,7 +38,7 @@ export const ChatBot = ({ balance }: { balance: number }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hi! I'm Chimchar, your financial advisor! How can I help you today?",
+      content: `Hi! I'm ${balance >= 10000 ? 'Monferno' : 'Chimchar'}, your financial advisor! How can I help you today?`,
     },
   ]);
   const [input, setInput] = useState("");
@@ -60,6 +60,13 @@ export const ChatBot = ({ balance }: { balance: number }) => {
     setInput("");
   };
 
+  // Use the new Monferno image when balance is >= $10,000
+  const pokemonImage = balance >= 10000 
+    ? "/lovable-uploads/83bbfe47-3070-40c9-8767-f9c5db0629fa.png"
+    : "/lovable-uploads/1ec7a8b0-852e-4e7f-897d-51c39d1b66e7.png";
+
+  const pokemonName = balance >= 10000 ? 'Monferno' : 'Chimchar';
+
   return (
     <>
       <button
@@ -67,8 +74,8 @@ export const ChatBot = ({ balance }: { balance: number }) => {
         className="fixed bottom-6 right-6 w-20 h-20 rounded-full hover:scale-110 transition-transform duration-200 focus:outline-none"
       >
         <img
-          src="/lovable-uploads/1ec7a8b0-852e-4e7f-897d-51c39d1b66e7.png"
-          alt="Chimchar"
+          src={pokemonImage}
+          alt={pokemonName}
           className="w-full h-full object-contain"
         />
       </button>
@@ -78,11 +85,11 @@ export const ChatBot = ({ balance }: { balance: number }) => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <img
-                src="/lovable-uploads/1ec7a8b0-852e-4e7f-897d-51c39d1b66e7.png"
-                alt="Chimchar"
+                src={pokemonImage}
+                alt={pokemonName}
                 className="w-10 h-10 object-contain"
               />
-              Chimchar - Financial Advisor
+              {pokemonName} - Financial Advisor
             </DialogTitle>
           </DialogHeader>
 
