@@ -62,7 +62,7 @@ export const ChatBot = ({ balance }: { balance: number }) => {
 
   // Use different Pokemon images based on balance thresholds
   const pokemonImage = balance >= 100000
-    ? "/lovable-uploads/8619d662-bb2b-4705-a307-489518dc3b71.png"
+    ? "/lovable-uploads/949d88aa-bd23-4db2-ad21-e6feae2164a8.png"
     : balance >= 10000 
       ? "/lovable-uploads/83bbfe47-3070-40c9-8767-f9c5db0629fa.png"
       : "/lovable-uploads/1ec7a8b0-852e-4e7f-897d-51c39d1b66e7.png";
