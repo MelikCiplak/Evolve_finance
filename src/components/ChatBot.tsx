@@ -30,7 +30,7 @@ const getFinancialAdvice = (message: string, balance: number): string => {
     return "I recommend using the 50/30/20 rule: 50% for needs, 30% for wants, and 20% for savings and debt repayment.";
   }
   
-  return "I'm Chimchar, your financial advisor! You can ask me about saving, investing, or budgeting. How can I help you today?";
+  return "I'm your financial advisor! You can ask me about saving, investing, or budgeting. How can I help you today?";
 };
 
 export const ChatBot = ({ balance }: { balance: number }) => {
@@ -38,7 +38,7 @@ export const ChatBot = ({ balance }: { balance: number }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: `Hi! I'm ${balance >= 100000 ? 'Infernape' : balance >= 10000 ? 'Monferno' : 'Chimchar'}, your financial advisor! How can I help you today?`,
+      content: `Hi! I'm ${balance > 100000 ? 'Infernape' : balance > 1000 ? 'Monferno' : 'Chimchar'}, your financial advisor! How can I help you today?`,
     },
   ]);
   const [input, setInput] = useState("");
@@ -60,18 +60,27 @@ export const ChatBot = ({ balance }: { balance: number }) => {
     setInput("");
   };
 
-  // Use different Pokemon images based on balance thresholds
-  const pokemonImage = balance >= 100000
-    ? "/lovable-uploads/949d88aa-bd23-4db2-ad21-e6feae2164a8.png"
-    : balance >= 10000 
-      ? "/lovable-uploads/83bbfe47-3070-40c9-8767-f9c5db0629fa.png"
-      : "/lovable-uploads/1ec7a8b0-852e-4e7f-897d-51c39d1b66e7.png";
+  // Get the correct Pokemon based on balance
+  const getPokemonInfo = () => {
+    if (balance > 100000) {
+      return {
+        image: "/lovable-uploads/949d88aa-bd23-4db2-ad21-e6feae2164a8.png",
+        name: "Infernape"
+      };
+    } else if (balance > 1000) {
+      return {
+        image: "/lovable-uploads/83bbfe47-3070-40c9-8767-f9c5db0629fa.png",
+        name: "Monferno"
+      };
+    } else {
+      return {
+        image: "/lovable-uploads/1ec7a8b0-852e-4e7f-897d-51c39d1b66e7.png",
+        name: "Chimchar"
+      };
+    }
+  };
 
-  const pokemonName = balance >= 100000 
-    ? 'Infernape' 
-    : balance >= 10000 
-      ? 'Monferno' 
-      : 'Chimchar';
+  const { image, name } = getPokemonInfo();
 
   return (
     <>
@@ -80,8 +89,8 @@ export const ChatBot = ({ balance }: { balance: number }) => {
         className="fixed bottom-6 right-6 w-40 h-40 rounded-full hover:scale-110 transition-transform duration-200 focus:outline-none"
       >
         <img
-          src={pokemonImage}
-          alt={pokemonName}
+          src={image}
+          alt={name}
           className="w-full h-full object-contain"
         />
       </button>
@@ -91,11 +100,11 @@ export const ChatBot = ({ balance }: { balance: number }) => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <img
-                src={pokemonImage}
-                alt={pokemonName}
+                src={image}
+                alt={name}
                 className="w-20 h-20 object-contain"
               />
-              {pokemonName} - Financial Advisor
+              {name} - Financial Advisor
             </DialogTitle>
           </DialogHeader>
 
