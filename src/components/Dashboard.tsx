@@ -5,6 +5,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { ArrowUpRight, ArrowDownRight, Plus, Minus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { CatAssistant } from "./CatAssistant";
+import { FinanceChat } from "./FinanceChat";
 
 interface Transaction {
   id: number;
@@ -19,6 +21,7 @@ export const Dashboard = () => {
   const [amount, setAmount] = useState("");
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false);
+  const [showChat, setShowChat] = useState(false);
   
   // Mock data - in a real app this would come from an API
   const [totalBalance, setTotalBalance] = useState(24563.00);
@@ -174,6 +177,14 @@ export const Dashboard = () => {
             </div>
           </Card>
         )}
+
+        {showChat && (
+          <div className="fixed inset-y-0 right-0 w-96 p-4 animate-in">
+            <FinanceChat />
+          </div>
+        )}
+
+        <CatAssistant onCatClick={() => setShowChat(!showChat)} />
       </div>
     </div>
   );
