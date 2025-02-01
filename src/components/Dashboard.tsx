@@ -83,7 +83,7 @@ export const Dashboard = () => {
       return;
     }
 
-    setTotalBalance(prev => prev - numAmount);
+    setTotalBalance(totalBalance - numAmount);
     const newTransaction: Transaction = {
       id: transactions.length + 1,
       description: 'Withdrawal',
