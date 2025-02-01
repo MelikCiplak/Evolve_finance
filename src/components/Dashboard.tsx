@@ -86,6 +86,16 @@ export const Dashboard = () => {
         {showTransactions && (
           <TransactionsList transactions={transactions} />
         )}
+        
+        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
+          <h2 className="text-4xl font-bold tracking-wider text-[#222222] opacity-80 hover:opacity-100 transition-opacity duration-300" 
+              style={{
+                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
+                letterSpacing: '0.2em'
+              }}>
+            evolve
+          </h2>
+        </div>
       </div>
     </div>
   );
