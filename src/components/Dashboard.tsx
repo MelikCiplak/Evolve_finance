@@ -114,7 +114,7 @@ export const Dashboard = () => {
               className="glass-card px-5 py-2.5 flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform"
               onClick={() => navigate('/chat')}
             >
-              <Avatar className="h-20 w-20">
+              <Avatar className="h-8 w-8">
                 <AvatarImage 
                   src={getPokemonImage(totalBalance)}
                   alt={getPokemonName(totalBalance)}
