@@ -75,7 +75,7 @@ export default function ChatBuddy() {
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div className="flex items-center gap-2">
-          <Avatar className="h-8 w-8">
+          <Avatar className="h-20 w-20">
             <AvatarImage src={getPokemonImage(totalBalance)} alt={getPokemonName(totalBalance)} />
             <AvatarFallback>CH</AvatarFallback>
           </Avatar>
@@ -88,7 +88,7 @@ export default function ChatBuddy() {
           {messages.map((message, index) => (
             <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               {message.role === 'assistant' && (
-                <Avatar className="h-8 w-8 mr-2">
+                <Avatar className="h-20 w-20 mr-2">
                   <AvatarImage src={getPokemonImage(totalBalance)} alt={getPokemonName(totalBalance)} />
                   <AvatarFallback>CH</AvatarFallback>
                 </Avatar>

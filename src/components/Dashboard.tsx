@@ -114,7 +114,7 @@ export const Dashboard = () => {
               className="glass-card px-5 py-2.5 flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform"
               onClick={() => navigate('/chat')}
             >
-              <Avatar className="h-6 w-6">
+              <Avatar className="h-20 w-20">
                 <AvatarImage 
                   src={getPokemonImage(totalBalance)}
                   alt={getPokemonName(totalBalance)}
@@ -154,7 +154,7 @@ export const Dashboard = () => {
       <img 
         src={getPokemonImage(totalBalance)}
         alt={getPokemonName(totalBalance)}
-        className="fixed bottom-6 right-6 w-16 h-16 cursor-pointer hover:scale-110 transition-transform duration-200 animate-slide"
+        className="fixed bottom-6 right-6 w-40 h-40 cursor-pointer hover:scale-110 transition-transform duration-200 animate-slide"
         onClick={() => {
           navigate('/chat');
           toast.success(`Hey! I'm ${getPokemonName(totalBalance)}, your financial buddy! 🔥`);
