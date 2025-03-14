@@ -1,45 +1,83 @@
 
+import { Transaction } from "@/types/transaction";
+
 // Basic machine learning categorizer for transactions
 // This is a simple rule-based system that could be replaced with a more sophisticated ML model in the future
 
 type CategoryRule = {
   keywords: string[];
   category: string;
+  priceRange?: {
+    min?: number;
+    max?: number;
+  };
 };
 
-// Define category rules with keywords that suggest different spending categories
+// Define category rules with keywords and price ranges that suggest different spending categories
 const categoryRules: CategoryRule[] = [
   {
     keywords: ['grocery', 'groceries', 'food', 'supermarket', 'market', 'fruit', 'vegetable', 'meat', 'dairy', 'bread', 'milk', 'egg'],
-    category: 'Groceries'
+    category: 'Groceries',
+    priceRange: {
+      min: 5,
+      max: 300
+    }
   },
   {
     keywords: ['restaurant', 'cafe', 'coffee', 'dinner', 'lunch', 'breakfast', 'takeout', 'takeaway', 'delivery', 'uber eats', 'doordash'],
-    category: 'Dining Out'
+    category: 'Dining Out',
+    priceRange: {
+      min: 5,
+      max: 200
+    }
   },
   {
     keywords: ['rent', 'mortgage', 'housing', 'apartment', 'condo', 'house payment'],
-    category: 'Housing'
+    category: 'Housing',
+    priceRange: {
+      min: 500,
+      max: 5000
+    }
   },
   {
     keywords: ['electricity', 'water', 'gas', 'internet', 'phone', 'utility', 'bill', 'subscription', 'netflix', 'spotify', 'hulu', 'disney'],
-    category: 'Bills & Utilities'
+    category: 'Bills & Utilities',
+    priceRange: {
+      min: 10,
+      max: 300
+    }
   },
   {
     keywords: ['transport', 'transportation', 'gas', 'fuel', 'uber', 'lyft', 'taxi', 'bus', 'train', 'subway', 'transit', 'car', 'vehicle'],
-    category: 'Transportation'
+    category: 'Transportation',
+    priceRange: {
+      min: 5,
+      max: 200
+    }
   },
   {
     keywords: ['health', 'medical', 'doctor', 'hospital', 'clinic', 'pharmacy', 'medicine', 'prescription', 'insurance'],
-    category: 'Healthcare'
+    category: 'Healthcare',
+    priceRange: {
+      min: 20,
+      max: 1000
+    }
   },
   {
     keywords: ['entertainment', 'movie', 'game', 'gaming', 'concert', 'theatre', 'theater', 'show', 'event', 'ticket'],
-    category: 'Entertainment'
+    category: 'Entertainment',
+    priceRange: {
+      min: 10,
+      max: 200
+    }
   },
   {
     keywords: ['clothing', 'clothes', 'shoes', 'apparel', 'fashion', 'accessory', 'accessories', 'jewelry'],
-    category: 'Shopping'
+    category: 'Shopping',
+    priceRange: {
+      min: 20,
+      max: 500
+    }
   },
   {
     keywords: ['salary', 'income', 'payment', 'paycheck', 'deposit', 'wage', 'earnings', 'tax return', 'bonus', 'commission'],
@@ -51,22 +89,49 @@ const categoryRules: CategoryRule[] = [
   },
   {
     keywords: ['education', 'school', 'college', 'university', 'tuition', 'course', 'class', 'book', 'textbook'],
-    category: 'Education'
+    category: 'Education',
+    priceRange: {
+      min: 20,
+      max: 20000
+    }
   }
 ];
 
 /**
- * Categorizes a transaction based on its description
+ * Categorizes a transaction based on its description and amount
  * @param description The transaction description
+ * @param amount The transaction amount
  * @returns The determined category or 'Other' if no category matches
  */
-export const categorizeTransaction = (description: string): string => {
+export const categorizeTransaction = (description: string, amount: number = 0): string => {
   const lowerDesc = description.toLowerCase();
   
+  // First try to match by both keywords and price range
   for (const rule of categoryRules) {
-    if (rule.keywords.some(keyword => lowerDesc.includes(keyword.toLowerCase()))) {
-      return rule.category;
+    const keywordMatch = rule.keywords.some(keyword => lowerDesc.includes(keyword.toLowerCase()));
+    
+    if (keywordMatch) {
+      // If there's a price range defined, check if the amount falls within that range
+      if (rule.priceRange) {
+        const { min, max } = rule.priceRange;
+        if ((min === undefined || amount >= min) && (max === undefined || amount <= max)) {
+          return rule.category;
+        }
+      } else {
+        return rule.category;
+      }
     }
+  }
+  
+  // If no match by keywords+price, try to categorize by price range only
+  if (amount >= 500 && amount <= 5000) {
+    return 'Housing';
+  } else if (amount >= 200 && amount <= 1000) {
+    return 'Major Expense';
+  } else if (amount >= 50 && amount <= 200) {
+    return 'Moderate Expense';
+  } else if (amount > 0 && amount < 50) {
+    return 'Minor Expense';
   }
   
   return 'Other';
@@ -82,7 +147,7 @@ export const categorizeTransactions = (transactions: Transaction[]): Transaction
     if (!transaction.category) {
       return {
         ...transaction,
-        category: categorizeTransaction(transaction.description)
+        category: categorizeTransaction(transaction.description, transaction.amount)
       };
     }
     return transaction;

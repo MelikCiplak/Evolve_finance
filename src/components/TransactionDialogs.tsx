@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Minus } from "lucide-react";
-import { useState } from "react";
 
 interface TransactionDialogsProps {
   showAddDialog: boolean;
@@ -14,6 +13,8 @@ interface TransactionDialogsProps {
   setAmount: (amount: string) => void;
   handleAddFunds: () => void;
   handleWithdraw: () => void;
+  description?: string;
+  setDescription?: (description: string) => void;
 }
 
 export const TransactionDialogs = ({
@@ -24,10 +25,10 @@ export const TransactionDialogs = ({
   amount,
   setAmount,
   handleAddFunds,
-  handleWithdraw
+  handleWithdraw,
+  description = "",
+  setDescription = () => {}
 }: TransactionDialogsProps) => {
-  const [description, setDescription] = useState("");
-  
   return (
     <div className="flex gap-4 justify-center">
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
@@ -53,10 +54,7 @@ export const TransactionDialogs = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-            <Button onClick={() => {
-              handleAddFunds();
-              setDescription("");
-            }} className="w-full">
+            <Button onClick={handleAddFunds} className="w-full">
               Add Funds
             </Button>
           </div>
@@ -86,10 +84,7 @@ export const TransactionDialogs = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-            <Button onClick={() => {
-              handleWithdraw();
-              setDescription("");
-            }} className="w-full">
+            <Button onClick={handleWithdraw} className="w-full">
               Withdraw
             </Button>
           </div>

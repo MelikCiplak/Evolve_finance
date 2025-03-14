@@ -17,6 +17,7 @@ export const Dashboard = () => {
   const { totalBalance, setTotalBalance } = useBalance();
   const [showTransactions, setShowTransactions] = useState(false);
   const [amount, setAmount] = useState("");
+  const [description, setDescription] = useState("");
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false);
   
@@ -68,18 +69,19 @@ export const Dashboard = () => {
       });
     }
 
-    const description = 'Added Funds';
+    const desc = description || 'Added Funds';
     
     const newTransaction: Transaction = {
       id: transactions.length + 1,
-      description: description,
+      description: desc,
       amount: numAmount,
       date: new Date().toISOString().split('T')[0],
       type: 'income',
-      category: categorizeTransaction(description)
+      category: categorizeTransaction(desc, numAmount)
     };
     setTransactions(prev => [newTransaction, ...prev]);
     setAmount("");
+    setDescription("");
     setShowAddDialog(false);
     toast.success(`Successfully added $${numAmount.toLocaleString()}`);
   };
@@ -97,18 +99,19 @@ export const Dashboard = () => {
 
     setTotalBalance(totalBalance - numAmount);
     
-    const description = 'Withdrawal';
+    const desc = description || 'Withdrawal';
     
     const newTransaction: Transaction = {
       id: transactions.length + 1,
-      description: description,
+      description: desc,
       amount: numAmount,
       date: new Date().toISOString().split('T')[0],
       type: 'expense',
-      category: categorizeTransaction(description)
+      category: categorizeTransaction(desc, numAmount)
     };
     setTransactions(prev => [newTransaction, ...prev]);
     setAmount("");
+    setDescription("");
     setShowWithdrawDialog(false);
     toast.success(`Successfully withdrew $${numAmount.toLocaleString()}`);
   };
