@@ -1,5 +1,7 @@
+
 import { Card } from "@/components/ui/card";
 import type { Transaction } from "@/types/transaction";
+import { Badge } from "@/components/ui/badge";
 
 interface TransactionsListProps {
   transactions: Transaction[];
@@ -16,7 +18,12 @@ export const TransactionsList = ({ transactions }: TransactionsListProps) => {
             className="flex items-center justify-between p-4 rounded-lg bg-gray-900"
           >
             <div>
-              <p className="font-medium text-white">{transaction.description}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-medium text-white">{transaction.description}</p>
+                {transaction.category && (
+                  <Badge className="bg-orange-600">{transaction.category}</Badge>
+                )}
+              </div>
               <p className="text-sm text-gray-400">{transaction.date}</p>
             </div>
             <p className={`font-mono font-medium ${

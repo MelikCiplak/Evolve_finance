@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { toast } from "sonner";
 import { BalanceCard } from "./BalanceCard";
@@ -9,6 +10,7 @@ import { Card } from "./ui/card";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useBalance } from "@/context/BalanceContext";
+import { categorizeTransaction } from "@/utils/transactionCategorizer";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -20,7 +22,14 @@ export const Dashboard = () => {
   
   const monthlyChange = 2.5;
   const [transactions, setTransactions] = useState<Transaction[]>([
-    { id: 1, description: 'Initial Balance', amount: 99, date: new Date().toISOString().split('T')[0], type: 'income' },
+    { 
+      id: 1, 
+      description: 'Initial Balance', 
+      amount: 99, 
+      date: new Date().toISOString().split('T')[0], 
+      type: 'income',
+      category: 'Income'
+    },
   ]);
 
   const getPokemonImage = (balance: number) => {
@@ -59,12 +68,15 @@ export const Dashboard = () => {
       });
     }
 
+    const description = 'Added Funds';
+    
     const newTransaction: Transaction = {
       id: transactions.length + 1,
-      description: 'Added Funds',
+      description: description,
       amount: numAmount,
       date: new Date().toISOString().split('T')[0],
-      type: 'income'
+      type: 'income',
+      category: categorizeTransaction(description)
     };
     setTransactions(prev => [newTransaction, ...prev]);
     setAmount("");
@@ -84,12 +96,16 @@ export const Dashboard = () => {
     }
 
     setTotalBalance(totalBalance - numAmount);
+    
+    const description = 'Withdrawal';
+    
     const newTransaction: Transaction = {
       id: transactions.length + 1,
-      description: 'Withdrawal',
+      description: description,
       amount: numAmount,
       date: new Date().toISOString().split('T')[0],
-      type: 'expense'
+      type: 'expense',
+      category: categorizeTransaction(description)
     };
     setTransactions(prev => [newTransaction, ...prev]);
     setAmount("");
