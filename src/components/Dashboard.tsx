@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { toast } from "sonner";
 import { BalanceCard } from "./BalanceCard";
 import { TransactionsList } from "./TransactionsList";
 import { TransactionDialogs } from "./TransactionDialogs";
 import type { Transaction } from "@/types/transaction";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, TrendingUp } from "lucide-react";
 import { Card } from "./ui/card";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -128,7 +127,18 @@ export const Dashboard = () => {
             evolve
           </h2>
           
-          <div className="ml-auto">
+          <div className="ml-auto flex space-x-4">
+            <Card 
+              className="glass-card px-5 py-2.5 flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform"
+              onClick={() => navigate('/investments')}
+            >
+              <Avatar className="h-8 w-8 bg-[#8B5CF6]">
+                <TrendingUp className="h-4 w-4 text-white" />
+                <AvatarFallback>IN</AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-medium text-white">Investments</span>
+            </Card>
+            
             <Card 
               className="glass-card px-5 py-2.5 flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform"
               onClick={() => navigate('/chat')}
@@ -169,7 +179,6 @@ export const Dashboard = () => {
         )}
       </div>
 
-      {/* Floating Pokemon Icon */}
       <img 
         src={getPokemonImage(totalBalance)}
         alt={getPokemonName(totalBalance)}

@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,6 +8,7 @@ import { BalanceProvider } from "./context/BalanceContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ChatBuddy from "./pages/ChatBuddy";
+import Investments from "./pages/Investments";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +22,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/chat" element={<ChatBuddy />} />
+            <Route path="/investments" element={<Investments />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
