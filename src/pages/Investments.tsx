@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -100,13 +100,16 @@ const Investments = () => {
             <ArrowLeft className="h-4 w-4" />
             <span className="sr-only">Back</span>
           </Button>
-          <h2 className="text-4xl font-bold tracking-wider text-[#222222] opacity-80 hover:opacity-100 transition-opacity duration-300" 
-              style={{
-                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
-                letterSpacing: '0.2em'
-              }}>
-            investments
-          </h2>
+          <div className="flex items-center gap-3">
+            <BarChart3 className="h-6 w-6 text-[#8E9196]" />
+            <h2 className="text-4xl font-bold tracking-wider text-[#222222] opacity-80 hover:opacity-100 transition-opacity duration-300" 
+                style={{
+                  textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
+                  letterSpacing: '0.2em'
+                }}>
+              investments
+            </h2>
+          </div>
         </div>
 
         <Tabs defaultValue="sp500" onValueChange={(v) => setSelectedAsset(v as any)}>
