@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { BalanceCard } from "./BalanceCard";
@@ -9,7 +10,7 @@ import { Card } from "./ui/card";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useBalance } from "@/context/BalanceContext";
-import { categorizeTransaction } from "@/utils/transactionCategorizer";
+import { MLTransactionCategorizer } from "@/utils/mlTransactionCategorizer";
 import { fetchTransactions, addTransaction, fetchBalance } from "@/services/api";
 
 export const Dashboard = () => {
@@ -34,7 +35,10 @@ export const Dashboard = () => {
         setTotalBalance(balance);
         
         const loadedTransactions = await fetchTransactions();
-        setTransactions(loadedTransactions);
+        
+        // Use ML categorization for transactions
+        const categorizedTransactions = await MLTransactionCategorizer.categorizeTransactions(loadedTransactions);
+        setTransactions(categorizedTransactions);
       } catch (error) {
         console.error("Error loading data:", error);
         toast.error("Failed to load data. Using local data instead.");
@@ -100,13 +104,16 @@ export const Dashboard = () => {
       
       const desc = description || 'Added Funds';
       
+      // Use ML categorization for the new transaction
+      const category = await MLTransactionCategorizer.categorizeTransaction(desc, numAmount);
+      
       const newTransaction: Transaction = {
         id: Date.now(),
         description: desc,
         amount: numAmount,
         date: new Date().toISOString().split('T')[0],
         type: 'income',
-        category: categorizeTransaction(desc, numAmount)
+        category
       };
       
       setTransactions(prev => [newTransaction, ...prev]);
@@ -116,7 +123,8 @@ export const Dashboard = () => {
       toast.success(`Successfully added $${numAmount.toLocaleString()}`);
       
       const updatedTransactions = await fetchTransactions();
-      setTransactions(updatedTransactions);
+      const categorizedTransactions = await MLTransactionCategorizer.categorizeTransactions(updatedTransactions);
+      setTransactions(categorizedTransactions);
     } catch (error) {
       console.error("Error adding funds:", error);
       toast.error("Failed to add funds. Please try again.");
@@ -145,13 +153,16 @@ export const Dashboard = () => {
       
       const desc = description || 'Withdrawal';
       
+      // Use ML categorization for the new transaction
+      const category = await MLTransactionCategorizer.categorizeTransaction(desc, numAmount);
+      
       const newTransaction: Transaction = {
         id: Date.now(),
         description: desc,
         amount: numAmount,
         date: new Date().toISOString().split('T')[0],
         type: 'expense',
-        category: categorizeTransaction(desc, numAmount)
+        category
       };
       
       setTransactions(prev => [newTransaction, ...prev]);
@@ -161,7 +172,8 @@ export const Dashboard = () => {
       toast.success(`Successfully withdrew $${numAmount.toLocaleString()}`);
       
       const updatedTransactions = await fetchTransactions();
-      setTransactions(updatedTransactions);
+      const categorizedTransactions = await MLTransactionCategorizer.categorizeTransactions(updatedTransactions);
+      setTransactions(categorizedTransactions);
     } catch (error) {
       console.error("Error withdrawing funds:", error);
       toast.error("Failed to withdraw funds. Please try again.");

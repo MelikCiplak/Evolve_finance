@@ -22,3 +22,11 @@ export const redisConfig = {
 export const serverConfig = {
   port: parseInt(process.env.SERVER_PORT || '3001'),
 };
+
+// NLP Configuration for transaction categorization
+export const nlpConfig = {
+  // Default confidence threshold for ML categorization
+  confidenceThreshold: parseFloat(process.env.NLP_CONFIDENCE_THRESHOLD || '0.65'),
+  // Cache time for NLP model results in seconds
+  cacheTime: parseInt(process.env.NLP_CACHE_TIME || '86400'),
+};

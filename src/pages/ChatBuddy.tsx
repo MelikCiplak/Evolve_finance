@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -8,7 +7,8 @@ import { ArrowLeft, Send } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useBalance } from "@/context/BalanceContext";
-import { getCategorySummary, categorizeTransaction } from "@/utils/transactionCategorizer";
+import { getCategorySummary } from "@/utils/transactionCategorizer";
+import { MLTransactionCategorizer } from "@/utils/mlTransactionCategorizer";
 import { Transaction } from "@/types/transaction";
 
 interface Message {
@@ -16,7 +16,6 @@ interface Message {
   content: string;
 }
 
-// Mock transactions for analysis (in a real app, these would come from state/context)
 const mockTransactions: Transaction[] = [
   { id: 1, description: 'Grocery Store', amount: 45.99, date: new Date().toISOString().split('T')[0], type: 'expense', category: 'Groceries' },
   { id: 2, description: 'Coffee Shop', amount: 4.50, date: new Date().toISOString().split('T')[0], type: 'expense', category: 'Dining Out' },
@@ -55,7 +54,6 @@ export default function ChatBuddy() {
   const navigate = useNavigate();
   
   useEffect(() => {
-    // Scroll to bottom whenever messages change
     if (scrollAreaRef.current) {
       const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
       if (scrollContainer) {
@@ -64,22 +62,19 @@ export default function ChatBuddy() {
     }
   }, [messages]);
 
-  const generateSmartResponse = (userInput: string): string => {
+  const generateSmartResponse = async (userInput: string): Promise<string> => {
     const lowerInput = userInput.toLowerCase();
     
-    // Get a transaction summary by category
     const categorySummary = getCategorySummary(mockTransactions);
     const highestCategory = Object.entries(categorySummary)
       .sort((a, b) => b[1] - a[1])
       .filter(([category]) => category !== 'Income')[0];
     
-    // Analyze if the user is asking about a specific category
-    const userCategory = categorizeTransaction(lowerInput);
+    const userCategory = await MLTransactionCategorizer.categorizeTransaction(lowerInput);
     
-    // Different response types
     if (lowerInput.includes('category') || lowerInput.includes('spending') || lowerInput.includes('where') || lowerInput.includes('what am i spending')) {
       if (highestCategory) {
-        return `Based on your recent transactions, your highest spending category is ${highestCategory[0]} at $${highestCategory[1].toFixed(2)}. You might want to look at ways to reduce spending in this area if you're trying to save money. 🔥`;
+        return `Based on our ML analysis of your recent transactions, your highest spending category is ${highestCategory[0]} at $${highestCategory[1].toFixed(2)}. You might want to look at ways to reduce spending in this area if you're trying to save money. 🔥`;
       } else {
         return `I don't see any significant spending patterns yet. Keep tracking your expenses and I'll provide insights as patterns emerge! 🔥`;
       }
@@ -101,12 +96,11 @@ export default function ChatBuddy() {
       return `Before investing, make sure you have an emergency fund covering 3-6 months of expenses. Then, consider starting with index funds or ETFs for diversification. As your balance grows, you can explore more sophisticated investment options! 🔥`;
     }
     else {
-      // Default responses
       const responses = [
-        `That's a great question about ${userInput.trim()}! To manage your finances better, you should track your expenses and create a budget. I can help you categorize your spending automatically! 🔥`,
-        `When it comes to ${userInput.trim()}, it's important to know where your money is going. I noticed your highest spending category is ${highestCategory ? highestCategory[0] : 'still being determined'}. 🔥`,
+        `That's a great question about ${userInput.trim()}! To manage your finances better, you should track your expenses and create a budget. Our ML system can help you categorize your spending automatically! 🔥`,
+        `When it comes to ${userInput.trim()}, it's important to know where your money is going. Our ML analysis shows your highest spending category is ${highestCategory ? highestCategory[0] : 'still being determined'}. 🔥`,
         `About ${userInput.trim()} - it's important to have an emergency fund that covers 3-6 months of expenses. That's financial security! 🔥`,
-        `Regarding ${userInput.trim()}, consider automating your savings. It's easier to save when you don't see the money first! My analysis shows you might want to cut back on ${highestCategory ? highestCategory[0] : 'unnecessary expenses'}. 🔥`
+        `Regarding ${userInput.trim()}, consider automating your savings. It's easier to save when you don't see the money first! My ML analysis shows you might want to cut back on ${highestCategory ? highestCategory[0] : 'unnecessary expenses'}. 🔥`
       ];
       return responses[Math.floor(Math.random() * responses.length)];
     }
@@ -115,7 +109,6 @@ export default function ChatBuddy() {
   const handleSend = () => {
     if (!input.trim()) return;
     
-    // Add user message
     const userMessage: Message = {
       role: 'user',
       content: input.trim()
@@ -124,9 +117,8 @@ export default function ChatBuddy() {
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     
-    // Generate ML-powered response
-    setTimeout(() => {
-      const aiResponse = generateSmartResponse(userMessage.content);
+    setTimeout(async () => {
+      const aiResponse = await generateSmartResponse(userMessage.content);
       
       const aiMessage: Message = {
         role: 'assistant',

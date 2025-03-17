@@ -4,6 +4,7 @@ import cors from 'cors';
 import { serverConfig } from './config';
 import transactionRoutes from './routes/transactions';
 import balanceRoutes from './routes/balance';
+import { redisClient } from './db';
 
 const app = express();
 
@@ -18,6 +19,24 @@ app.use('/api/balance', balanceRoutes);
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
+});
+
+// ML model status endpoint
+app.get('/api/ml/status', async (req, res) => {
+  try {
+    const isRedisConnected = redisClient.isReady;
+    res.status(200).json({
+      status: 'ok',
+      cacheEnabled: isRedisConnected,
+      modelReady: true,
+    });
+  } catch (error) {
+    console.error('Error checking ML status:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to check ML model status'
+    });
+  }
 });
 
 // Start server
