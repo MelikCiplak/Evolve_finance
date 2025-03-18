@@ -10,15 +10,8 @@ import NotFound from "./pages/NotFound";
 import ChatBuddy from "./pages/ChatBuddy";
 import Investments from "./pages/Investments";
 
-// Create a new QueryClient instance
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+// Create a simple QueryClient instance
+const queryClient = new QueryClient();
 
 const App = () => {
   return (

@@ -38,7 +38,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-black text-white font-inter antialiased;
+    @apply bg-background text-foreground font-inter antialiased;
   }
   html, body, #root {
     height: 100%;
