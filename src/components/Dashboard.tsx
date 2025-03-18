@@ -1,11 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { BalanceCard } from "./BalanceCard";
 import { TransactionsList } from "./TransactionsList";
 import { TransactionDialogs } from "./TransactionDialogs";
 import type { Transaction } from "@/types/transaction";
-import { MessageCircle, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { Card } from "./ui/card";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -184,7 +183,7 @@ export const Dashboard = () => {
     <div className="min-h-screen bg-black p-6">
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="relative flex justify-center items-center mb-12">
-          <h2 className="text-4xl font-bold tracking-wider text-[#222222] opacity-80 hover:opacity-100 transition-opacity duration-300 absolute left-1/2 transform -translate-x-1/2" 
+          <h2 className="text-4xl font-bold text-white tracking-wider opacity-90 hover:opacity-100 transition-opacity duration-300 absolute left-1/2 transform -translate-x-1/2" 
               style={{
                 textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
                 letterSpacing: '0.2em'
@@ -232,6 +231,8 @@ export const Dashboard = () => {
           setShowWithdrawDialog={setShowWithdrawDialog}
           amount={amount}
           setAmount={setAmount}
+          description={description}
+          setDescription={setDescription}
           handleAddFunds={handleAddFunds}
           handleWithdraw={handleWithdraw}
         />
