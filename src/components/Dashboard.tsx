@@ -1,17 +1,16 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { BalanceCard } from "./BalanceCard";
 import { TransactionsList } from "./TransactionsList";
 import { TransactionDialogs } from "./TransactionDialogs";
 import type { Transaction } from "@/types/transaction";
-import { TrendingUp } from "lucide-react";
+import { MessageCircle, TrendingUp } from "lucide-react";
 import { Card } from "./ui/card";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useBalance } from "@/context/BalanceContext";
-import { MLTransactionCategorizer } from "@/utils/mlTransactionCategorizer";
-import { fetchTransactions, addTransaction, fetchBalance } from "@/services/api";
+import { categorizeTransaction } from "@/utils/transactionCategorizer";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -21,62 +20,18 @@ export const Dashboard = () => {
   const [description, setDescription] = useState("");
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   
   const monthlyChange = 2.5;
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setIsLoading(true);
-        // Try to fetch balance from API, fallback to default if fails
-        let balance = 99;
-        try {
-          balance = await fetchBalance();
-        } catch (error) {
-          console.error("Error fetching balance:", error);
-        }
-        setTotalBalance(balance);
-        
-        // Try to fetch transactions, fallback to default if fails
-        let loadedTransactions: Transaction[] = [];
-        try {
-          loadedTransactions = await fetchTransactions();
-          // Use ML categorization for transactions
-          loadedTransactions = await MLTransactionCategorizer.categorizeTransactions(loadedTransactions);
-        } catch (error) {
-          console.error("Error loading transactions:", error);
-          loadedTransactions = [{ 
-            id: 1, 
-            description: 'Initial Balance', 
-            amount: 99, 
-            date: new Date().toISOString().split('T')[0], 
-            type: 'income',
-            category: 'Income'
-          }];
-        }
-        
-        setTransactions(loadedTransactions);
-      } catch (error) {
-        console.error("Error loading data:", error);
-        toast.error("Failed to load data. Using default data instead.");
-        
-        setTransactions([{ 
-          id: 1, 
-          description: 'Initial Balance', 
-          amount: 99, 
-          date: new Date().toISOString().split('T')[0], 
-          type: 'income',
-          category: 'Income'
-        }]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    loadData();
-  }, [setTotalBalance]);
+  const [transactions, setTransactions] = useState<Transaction[]>([
+    { 
+      id: 1, 
+      description: 'Initial Balance', 
+      amount: 99, 
+      date: new Date().toISOString().split('T')[0], 
+      type: 'income',
+      category: 'Income'
+    },
+  ]);
 
   const getPokemonImage = (balance: number) => {
     if (balance >= 100000) {
@@ -94,63 +49,44 @@ export const Dashboard = () => {
     return "Chimchar";
   };
 
-  const handleAddFunds = async () => {
+  const handleAddFunds = () => {
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0) {
       toast.error("Please enter a valid amount");
       return;
     }
 
-    try {
-      await addTransaction({
-        description: description || 'Added Funds',
-        amount: numAmount,
-        type: 'income'
+    const newBalance = totalBalance + numAmount;
+    setTotalBalance(newBalance);
+    
+    if (totalBalance < 10000 && newBalance >= 10000) {
+      toast.success("🎉 Congratulations! Your Chimchar has evolved into Monferno!", {
+        duration: 5000
       });
-      
-      const newBalance = totalBalance + numAmount;
-      setTotalBalance(newBalance);
-      
-      if (totalBalance < 10000 && newBalance >= 10000) {
-        toast.success("🎉 Congratulations! Your Chimchar has evolved into Monferno!", {
-          duration: 5000
-        });
-      } else if (totalBalance < 100000 && newBalance >= 100000) {
-        toast.success("🎉 Congratulations! Your Monferno has evolved into Infernape!", {
-          duration: 5000
-        });
-      }
-      
-      const desc = description || 'Added Funds';
-      
-      // Use ML categorization for the new transaction
-      const category = await MLTransactionCategorizer.categorizeTransaction(desc, numAmount);
-      
-      const newTransaction: Transaction = {
-        id: Date.now(),
-        description: desc,
-        amount: numAmount,
-        date: new Date().toISOString().split('T')[0],
-        type: 'income',
-        category
-      };
-      
-      setTransactions(prev => [newTransaction, ...prev]);
-      setAmount("");
-      setDescription("");
-      setShowAddDialog(false);
-      toast.success(`Successfully added $${numAmount.toLocaleString()}`);
-      
-      const updatedTransactions = await fetchTransactions();
-      const categorizedTransactions = await MLTransactionCategorizer.categorizeTransactions(updatedTransactions);
-      setTransactions(categorizedTransactions);
-    } catch (error) {
-      console.error("Error adding funds:", error);
-      toast.error("Failed to add funds. Please try again.");
+    } else if (totalBalance < 100000 && newBalance >= 100000) {
+      toast.success("🎉 Congratulations! Your Monferno has evolved into Infernape!", {
+        duration: 5000
+      });
     }
+
+    const desc = description || 'Added Funds';
+    
+    const newTransaction: Transaction = {
+      id: transactions.length + 1,
+      description: desc,
+      amount: numAmount,
+      date: new Date().toISOString().split('T')[0],
+      type: 'income',
+      category: categorizeTransaction(desc, numAmount)
+    };
+    setTransactions(prev => [newTransaction, ...prev]);
+    setAmount("");
+    setDescription("");
+    setShowAddDialog(false);
+    toast.success(`Successfully added $${numAmount.toLocaleString()}`);
   };
 
-  const handleWithdraw = async () => {
+  const handleWithdraw = () => {
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0) {
       toast.error("Please enter a valid amount");
@@ -161,49 +97,30 @@ export const Dashboard = () => {
       return;
     }
 
-    try {
-      await addTransaction({
-        description: description || 'Withdrawal',
-        amount: numAmount,
-        type: 'expense'
-      });
-      
-      setTotalBalance(totalBalance - numAmount);
-      
-      const desc = description || 'Withdrawal';
-      
-      // Use ML categorization for the new transaction
-      const category = await MLTransactionCategorizer.categorizeTransaction(desc, numAmount);
-      
-      const newTransaction: Transaction = {
-        id: Date.now(),
-        description: desc,
-        amount: numAmount,
-        date: new Date().toISOString().split('T')[0],
-        type: 'expense',
-        category
-      };
-      
-      setTransactions(prev => [newTransaction, ...prev]);
-      setAmount("");
-      setDescription("");
-      setShowWithdrawDialog(false);
-      toast.success(`Successfully withdrew $${numAmount.toLocaleString()}`);
-      
-      const updatedTransactions = await fetchTransactions();
-      const categorizedTransactions = await MLTransactionCategorizer.categorizeTransactions(updatedTransactions);
-      setTransactions(categorizedTransactions);
-    } catch (error) {
-      console.error("Error withdrawing funds:", error);
-      toast.error("Failed to withdraw funds. Please try again.");
-    }
+    setTotalBalance(totalBalance - numAmount);
+    
+    const desc = description || 'Withdrawal';
+    
+    const newTransaction: Transaction = {
+      id: transactions.length + 1,
+      description: desc,
+      amount: numAmount,
+      date: new Date().toISOString().split('T')[0],
+      type: 'expense',
+      category: categorizeTransaction(desc, numAmount)
+    };
+    setTransactions(prev => [newTransaction, ...prev]);
+    setAmount("");
+    setDescription("");
+    setShowWithdrawDialog(false);
+    toast.success(`Successfully withdrew $${numAmount.toLocaleString()}`);
   };
 
   return (
     <div className="min-h-screen bg-black p-6">
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="relative flex justify-center items-center mb-12">
-          <h2 className="text-4xl font-bold text-white tracking-wider opacity-90 hover:opacity-100 transition-opacity duration-300 absolute left-1/2 transform -translate-x-1/2" 
+          <h2 className="text-4xl font-bold tracking-wider text-[#222222] opacity-80 hover:opacity-100 transition-opacity duration-300 absolute left-1/2 transform -translate-x-1/2" 
               style={{
                 textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
                 letterSpacing: '0.2em'
@@ -251,8 +168,6 @@ export const Dashboard = () => {
           setShowWithdrawDialog={setShowWithdrawDialog}
           amount={amount}
           setAmount={setAmount}
-          description={description}
-          setDescription={setDescription}
           handleAddFunds={handleAddFunds}
           handleWithdraw={handleWithdraw}
         />

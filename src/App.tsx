@@ -10,28 +10,25 @@ import NotFound from "./pages/NotFound";
 import ChatBuddy from "./pages/ChatBuddy";
 import Investments from "./pages/Investments";
 
-// Create a simple QueryClient instance
 const queryClient = new QueryClient();
 
-const App = () => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <BalanceProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/chat" element={<ChatBuddy />} />
-              <Route path="/investments" element={<Investments />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </BalanceProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
-  );
-};
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <BalanceProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/chat" element={<ChatBuddy />} />
+            <Route path="/investments" element={<Investments />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </BalanceProvider>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;
