@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { BalanceCard } from "./BalanceCard";
 import { TransactionsList } from "./TransactionsList";
@@ -11,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useBalance } from "@/context/BalanceContext";
 import { categorizeTransaction } from "@/utils/transactionCategorizer";
+import { fetchTransactions, addTransaction, fetchBalance } from "@/services/api";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -20,18 +20,40 @@ export const Dashboard = () => {
   const [description, setDescription] = useState("");
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showWithdrawDialog, setShowWithdrawDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
   const monthlyChange = 2.5;
-  const [transactions, setTransactions] = useState<Transaction[]>([
-    { 
-      id: 1, 
-      description: 'Initial Balance', 
-      amount: 99, 
-      date: new Date().toISOString().split('T')[0], 
-      type: 'income',
-      category: 'Income'
-    },
-  ]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        
+        const balance = await fetchBalance();
+        setTotalBalance(balance);
+        
+        const loadedTransactions = await fetchTransactions();
+        setTransactions(loadedTransactions);
+      } catch (error) {
+        console.error("Error loading data:", error);
+        toast.error("Failed to load data. Using local data instead.");
+        
+        setTransactions([{ 
+          id: 1, 
+          description: 'Initial Balance', 
+          amount: 99, 
+          date: new Date().toISOString().split('T')[0], 
+          type: 'income',
+          category: 'Income'
+        }]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadData();
+  }, [setTotalBalance]);
 
   const getPokemonImage = (balance: number) => {
     if (balance >= 100000) {
@@ -49,44 +71,59 @@ export const Dashboard = () => {
     return "Chimchar";
   };
 
-  const handleAddFunds = () => {
+  const handleAddFunds = async () => {
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0) {
       toast.error("Please enter a valid amount");
       return;
     }
 
-    const newBalance = totalBalance + numAmount;
-    setTotalBalance(newBalance);
-    
-    if (totalBalance < 10000 && newBalance >= 10000) {
-      toast.success("🎉 Congratulations! Your Chimchar has evolved into Monferno!", {
-        duration: 5000
+    try {
+      await addTransaction({
+        description: description || 'Added Funds',
+        amount: numAmount,
+        type: 'income'
       });
-    } else if (totalBalance < 100000 && newBalance >= 100000) {
-      toast.success("🎉 Congratulations! Your Monferno has evolved into Infernape!", {
-        duration: 5000
-      });
+      
+      const newBalance = totalBalance + numAmount;
+      setTotalBalance(newBalance);
+      
+      if (totalBalance < 10000 && newBalance >= 10000) {
+        toast.success("🎉 Congratulations! Your Chimchar has evolved into Monferno!", {
+          duration: 5000
+        });
+      } else if (totalBalance < 100000 && newBalance >= 100000) {
+        toast.success("🎉 Congratulations! Your Monferno has evolved into Infernape!", {
+          duration: 5000
+        });
+      }
+      
+      const desc = description || 'Added Funds';
+      
+      const newTransaction: Transaction = {
+        id: Date.now(),
+        description: desc,
+        amount: numAmount,
+        date: new Date().toISOString().split('T')[0],
+        type: 'income',
+        category: categorizeTransaction(desc, numAmount)
+      };
+      
+      setTransactions(prev => [newTransaction, ...prev]);
+      setAmount("");
+      setDescription("");
+      setShowAddDialog(false);
+      toast.success(`Successfully added $${numAmount.toLocaleString()}`);
+      
+      const updatedTransactions = await fetchTransactions();
+      setTransactions(updatedTransactions);
+    } catch (error) {
+      console.error("Error adding funds:", error);
+      toast.error("Failed to add funds. Please try again.");
     }
-
-    const desc = description || 'Added Funds';
-    
-    const newTransaction: Transaction = {
-      id: transactions.length + 1,
-      description: desc,
-      amount: numAmount,
-      date: new Date().toISOString().split('T')[0],
-      type: 'income',
-      category: categorizeTransaction(desc, numAmount)
-    };
-    setTransactions(prev => [newTransaction, ...prev]);
-    setAmount("");
-    setDescription("");
-    setShowAddDialog(false);
-    toast.success(`Successfully added $${numAmount.toLocaleString()}`);
   };
 
-  const handleWithdraw = () => {
+  const handleWithdraw = async () => {
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0) {
       toast.error("Please enter a valid amount");
@@ -97,23 +134,38 @@ export const Dashboard = () => {
       return;
     }
 
-    setTotalBalance(totalBalance - numAmount);
-    
-    const desc = description || 'Withdrawal';
-    
-    const newTransaction: Transaction = {
-      id: transactions.length + 1,
-      description: desc,
-      amount: numAmount,
-      date: new Date().toISOString().split('T')[0],
-      type: 'expense',
-      category: categorizeTransaction(desc, numAmount)
-    };
-    setTransactions(prev => [newTransaction, ...prev]);
-    setAmount("");
-    setDescription("");
-    setShowWithdrawDialog(false);
-    toast.success(`Successfully withdrew $${numAmount.toLocaleString()}`);
+    try {
+      await addTransaction({
+        description: description || 'Withdrawal',
+        amount: numAmount,
+        type: 'expense'
+      });
+      
+      setTotalBalance(totalBalance - numAmount);
+      
+      const desc = description || 'Withdrawal';
+      
+      const newTransaction: Transaction = {
+        id: Date.now(),
+        description: desc,
+        amount: numAmount,
+        date: new Date().toISOString().split('T')[0],
+        type: 'expense',
+        category: categorizeTransaction(desc, numAmount)
+      };
+      
+      setTransactions(prev => [newTransaction, ...prev]);
+      setAmount("");
+      setDescription("");
+      setShowWithdrawDialog(false);
+      toast.success(`Successfully withdrew $${numAmount.toLocaleString()}`);
+      
+      const updatedTransactions = await fetchTransactions();
+      setTransactions(updatedTransactions);
+    } catch (error) {
+      console.error("Error withdrawing funds:", error);
+      toast.error("Failed to withdraw funds. Please try again.");
+    }
   };
 
   return (
